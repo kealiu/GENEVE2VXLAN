@@ -84,13 +84,4 @@ typedef struct {
     uint32_t addr;
 } FwTable;
 
-#include <stdatomic.h>
-static inline uint32_t atomic_increase_fetch(atomic_int *val) {
-    return __atomic_add_fetch(val, 1, __ATOMIC_SEQ_CST);
-}
-
-static inline uint32_t atomic_fetch_increase(atomic_int *val) {
-    return __atomic_fetch_add(val, 1, __ATOMIC_SEQ_CST);
-}
-
 #endif

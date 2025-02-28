@@ -7,14 +7,15 @@
 #include <netinet/ip.h>
 #include <netinet/udp.h>
 #include <pthread.h>
+#include <stdatomic.h>
 
 #include "def.h"
 
 FwTable gFwTable[0xFF]; // 65535*40
-atomic_int gFwIndex = 0; // current index of gHashTable
+static atomic_ushort gFwIndex; // current index of gHashTable
 
 static uint16_t push_geneve_hdr(GeneveHeader *header, uint32_t target_addr) {
-    uint16_t current = atomic_fetch_increase(&gFwIndex) & 0xFF; // booking one buffer
+    uint16_t current = atomic_fetch_add(&gFwIndex, 1); // booking one buffer
     memcpy(gFwTable[current].header, (uint8_t *)header, AWS_GWLB_HDR_SIZE);
     gFwTable[current].addr = target_addr;
     return current;
@@ -111,5 +112,6 @@ static int geneve_binding() {
 }
 
 int geneve_init() {
+    atomic_init(&gFwIndex, 0);
     return geneve_binding();
 }

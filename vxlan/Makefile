@@ -28,6 +28,6 @@ vxlan: $(OBJECTS)
 
 # 清理目标文件
 clean:
-	rm -f $(EXECUTABLES) $(OBJECTS)
+	rm -f vxlan $(OBJECTS)
 
 
