@@ -10,7 +10,7 @@ OBJECTS := $(SOURCES:.c=.o)
 EXECUTABLES := $(SOURCES:.c=)
 
 CFLAGS=-I. -g
-LDFLAGS=-lpthread
+LDFLAGS=-lpthread -latomic
 
 CC=gcc
 

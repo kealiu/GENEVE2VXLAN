@@ -11,7 +11,7 @@
 
 #include "def.h"
 
-FwTable gFwTable[0xFF]; // 65535*40
+FwTable gFwTable[0xFFFF]; // 65535*40
 static atomic_ushort gFwIndex; // current index of gHashTable
 
 static uint16_t push_geneve_hdr(GeneveHeader *header, uint32_t target_addr) {
@@ -35,7 +35,6 @@ static int process_geneve_packet(char *packet, int packet_len, uint32_t target_a
     
     memset((uint8_t*)vxlan, 0, sizeof(VxlanHeader)); // clear data
     //memcpy(vxlan->vni, header->vni, 3); // copy vni, 3 bytes
-
     vxlan->fwid = fwid;
     vxlan->iflag = 1;
     
