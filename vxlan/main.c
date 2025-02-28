@@ -51,7 +51,7 @@ int main() {
     vxlan_sockfd = vxland_init();
     
     struct in_addr addr;
-    inet_pton(AF_INET, "127.0.0.1", &addr);
+    inet_pton(AF_INET, "6.6.6.83", &addr);
     vxlan_target = addr.s_addr;
 
     for (int i = 0; i < num_cpus; i++) {

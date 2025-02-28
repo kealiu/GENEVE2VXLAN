@@ -14,7 +14,7 @@ FwTable gFwTable[0xFF]; // 65535*40
 atomic_int gFwIndex = 0; // current index of gHashTable
 
 static uint16_t push_geneve_hdr(GeneveHeader *header, uint32_t target_addr) {
-    uint16_t current = atomic_fetch_increase(&gFwIndex) && 0xFF; // booking one buffer
+    uint16_t current = atomic_fetch_increase(&gFwIndex) & 0xFF; // booking one buffer
     memcpy(gFwTable[current].header, (uint8_t *)header, AWS_GWLB_HDR_SIZE);
     gFwTable[current].addr = target_addr;
     return current;
@@ -27,15 +27,16 @@ static int process_geneve_packet(char *packet, int packet_len, uint32_t target_a
     }
 
     GeneveHeader *header = (GeneveHeader *)packet;
+    uint16_t fwid = push_geneve_hdr(header, target_addr); // save data;
 
     int total_header_len = sizeof(GeneveHeader) + header->opt_len*4;
-
     VxlanHeader *vxlan = (VxlanHeader *)(packet + total_header_len - sizeof(VxlanHeader));
+    
+    memset((uint8_t*)vxlan, 0, sizeof(VxlanHeader)); // clear data
+    //memcpy(vxlan->vni, header->vni, 3); // copy vni, 3 bytes
 
-    uint16_t fwid = push_geneve_hdr(header, target_addr);
-
-    memcpy(vxlan->vni, header->vni, 3); // copy vni, 3 bytes
     vxlan->fwid = fwid;
+    vxlan->iflag = 1;
     
     *retptr = (uint8_t * )vxlan ;
     return (packet_len - (total_header_len-sizeof(VxlanHeader)));
