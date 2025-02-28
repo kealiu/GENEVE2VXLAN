@@ -23,6 +23,7 @@ static int process_vxlan_packet(char *packet, int packet_len, uint8_t **retptr, 
     GeneveHeader *geneve = (GeneveHeader*)(packet + sizeof(VxlanHeader)  - AWS_GWLB_HDR_SIZE);
 
     uint16_t fwid = vxlan->fwid;
+
     memcpy(geneve, gFwTable[fwid].header, AWS_GWLB_HDR_SIZE);
     //memcpy(geneve->vni, vxlan->vni, 3); // copy vni, 3 bytes
     

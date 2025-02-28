@@ -17,11 +17,11 @@ typedef struct {
     uint8_t iflag:1; // must be 1
     uint8_t r2:3;
 #endif
-    uint8_t rsvd; // reserved 
+    uint8_t rsvd[3]; // reserved 
     /*****  START: special handling for geneve to vxlan */
-    uint16_t fwid; // reserved 24bits
+    uint16_t fwid;
     /*****  END: special handling for geneve to vxlan */
-    uint8_t vni[3];
+    uint8_t vni;
     uint8_t r3;
 } VxlanHeader;
 
